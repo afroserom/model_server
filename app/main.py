@@ -2,7 +2,11 @@ from typing import Optional
 from fastapi import FastAPI
 import os
 from pydantic import BaseModel
+from fastapi.encoders import jsonable_encoder
 from enum import Enum
+import pickle
+import pandas as pd
+import json
 
 class GenderEnum(str, Enum):
     male = "M"
@@ -39,6 +43,18 @@ API_VERSION = os.getenv("API_VERSION","v1")
 
 app = FastAPI()
 
+with open("utils/model.pkl", "rb") as file:
+    model = pickle.load(file)
+
 @app.get(f"/{API_VERSION}/predict")
 async def predict(observation:Observation, proba:bool = True):
-    return observation
+    observation_json = jsonable_encoder(observation)
+    print(observation_json)
+    df = pd.DataFrame([observation_json])
+    print(df)
+    print(model.predict_proba(df))
+
+    return {
+        "prediction": model.predict_proba(df)[:,1][0] if proba else model.predict(df)[0],
+        "features":  observation
+    }
