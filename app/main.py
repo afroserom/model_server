@@ -7,6 +7,7 @@ from enum import Enum
 import pickle
 import pandas as pd
 import json
+from typing import List, Optional
 
 class GenderEnum(str, Enum):
     male = "M"
@@ -39,6 +40,16 @@ class Observation(BaseModel):
     OCCUPATION_TYPE: str
     CNT_FAM_MEMBERS: int
 
+class Observations(BaseModel):
+    instances: List[Observation]
+
+class PredictionOut(BaseModel):
+    prediction: float
+    features: Observation
+
+class PredictionsOut(BaseModel):
+    prediction: List[float]
+
 API_VERSION = os.getenv("API_VERSION","v1")
 
 app = FastAPI()
@@ -46,15 +57,19 @@ app = FastAPI()
 with open("utils/model.pkl", "rb") as file:
     model = pickle.load(file)
 
-@app.get(f"/{API_VERSION}/predict")
+@app.get(f"/{API_VERSION}/predict", response_model=PredictionOut)
 async def predict(observation:Observation, proba:bool = True):
     observation_json = jsonable_encoder(observation)
-    print(observation_json)
     df = pd.DataFrame([observation_json])
-    print(df)
-    print(model.predict_proba(df))
-
     return {
         "prediction": model.predict_proba(df)[:,1][0] if proba else model.predict(df)[0],
         "features":  observation
+    }
+
+@app.get(f"/{API_VERSION}/batch_predict", response_model=PredictionsOut)
+async def predict(observations:Observations, proba:bool = True):
+    observations_json = jsonable_encoder(observations.instances)
+    df = pd.DataFrame(observations_json)
+    return {
+        "prediction": list(model.predict_proba(df)[:,1]) if proba else list(model.predict(df)),
     }
