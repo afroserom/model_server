@@ -57,7 +57,7 @@ app = FastAPI()
 with open("utils/model.pkl", "rb") as file:
     model = pickle.load(file)
 
-@app.get(f"/{API_VERSION}/predict", response_model=PredictionOut)
+@app.post(f"/{API_VERSION}/predict", response_model=PredictionOut)
 async def predict(observation:Observation, proba:bool = True):
     observation_json = jsonable_encoder(observation)
     df = pd.DataFrame([observation_json])
@@ -66,8 +66,8 @@ async def predict(observation:Observation, proba:bool = True):
         "features":  observation
     }
 
-@app.get(f"/{API_VERSION}/batch_predict", response_model=PredictionsOut)
-async def predict(observations:Observations, proba:bool = True):
+@app.post(f"/{API_VERSION}/batch_predict", response_model=PredictionsOut)
+async def batch_predict(observations:Observations, proba:bool = True):
     observations_json = jsonable_encoder(observations.instances)
     df = pd.DataFrame(observations_json)
     return {
