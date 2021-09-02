@@ -1,7 +1,9 @@
-runtime: custom
-env: flex
+runtime: python37
+env: standard
 instance_class: F1
+entrypoint: gunicorn -w 1 -k uvicorn.workers.UvicornWorker app.main:app
 
 automatic_scaling:
-  min_num_instances: 1
-  max_num_instances: 1
+  min_instances: 0
+  max_instances: 1
+  max_concurrent_requests: 50

@@ -54,7 +54,7 @@ API_VERSION = os.getenv("API_VERSION","v1")
 
 app = FastAPI()
 
-with open("utils/model.pkl", "rb") as file:
+with open(os.path.join(os.path.dirname(__file__), "utils/model.pkl"), "rb") as file:
     model = pickle.load(file)
 
 @app.post(f"/{API_VERSION}/predict", response_model=PredictionOut)
