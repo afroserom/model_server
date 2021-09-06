@@ -22,23 +22,23 @@ class FlagEnum(int, Enum):
     no = 0
 
 class Observation(BaseModel):
-    CODE_GENDER: GenderEnum
-    FLAG_OWN_CAR: YesNoEnum
-    FLAG_OWN_REALTY: YesNoEnum
-    CNT_CHILDREN: int
-    AMT_INCOME_TOTAL: float
-    NAME_INCOME_TYPE: str
-    NAME_EDUCATION_TYPE: str
-    NAME_FAMILY_STATUS: str
-    NAME_HOUSING_TYPE: str
-    DAYS_BIRTH: int
-    DAYS_EMPLOYED: int
-    FLAG_MOBIL: FlagEnum
-    FLAG_WORK_PHONE: FlagEnum
-    FLAG_PHONE: FlagEnum
-    FLAG_EMAIL: FlagEnum
-    OCCUPATION_TYPE: str
-    CNT_FAM_MEMBERS: int
+    CODE_GENDER: GenderEnum = None
+    FLAG_OWN_CAR: YesNoEnum = None
+    FLAG_OWN_REALTY: YesNoEnum = None
+    CNT_CHILDREN: int = None
+    AMT_INCOME_TOTAL: float = None
+    NAME_INCOME_TYPE: str = None
+    NAME_EDUCATION_TYPE: str = None
+    NAME_FAMILY_STATUS: str = None
+    NAME_HOUSING_TYPE: str = None
+    DAYS_BIRTH: int = None
+    DAYS_EMPLOYED: int = None
+    FLAG_MOBIL: FlagEnum = None
+    FLAG_WORK_PHONE: FlagEnum = None
+    FLAG_PHONE: FlagEnum = None
+    FLAG_EMAIL: FlagEnum = None
+    OCCUPATION_TYPE: str = None
+    CNT_FAM_MEMBERS: int = None
 
 class Observations(BaseModel):
     instances: List[Observation]
